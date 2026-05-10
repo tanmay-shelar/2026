@@ -1,0 +1,31 @@
+Execute DDL/DML statements which demonstrate the use of views. Update  
+the base table using its corresponding view. Also consider restrictions on updatable  
+views and perform view creation from multiple tables. 
+
+
+show databases; 
+use seit26; 
+select * from emp; 
+create or replace view dept20 as select * from emp where deptno=20; 
+select * from dept20; 
+update dept20 set comm=100 where comm is not null; 
+Select  * from emp; 
+update dept20 set comm=300 where comm is not null; 
+select * from emp; 
+delete from dept20 where empno=7369; 
+select * from emp; 
+create or replace view dept30 as select * from emp where deptno=30 with check option; 
+select * from dept20; 
+create or replace view dept30 as select * from emp where deptno=30; 
+select * from dept20; 
+create or replace view empview(eno,ename,sal,deptno,dname) as select 
+empno,ename,sal,emp.deptno,dname from emp,dept where emp.deptno=dept.deptno; 
+select * from empview; 
+drop view empview; 
+drop view dept20; 
+drop view dept30; 
+create view emp1 as select d.deptno,d.dname,sum(sal) as sal from emp join dept d on 
+d.deptno=emp.deptno group by d.deptno,d.dname; 
+desc emp1; 
+select * from emp1; 
+drop view emp1; 
