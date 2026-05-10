@@ -1,0 +1,41 @@
+Create a table emp1 same as emp. 
+I. Write a plsql function which will return total salary paid to given department number in 
+emp1.  
+II. Write a plsql function which will return total number of employees working in given  
+department number in emp1. 
+
+
+
+show databases; 
+use seit26; 
+create table emp1 as select * from emp; 
+delimiter // 
+create function total_salary(dno int) 
+returns float 
+deterministic 
+begin 
+declare tsal float; 
+select sum(sal) into tsal 
+from emp1 
+where deptno = dno; 
+return ifnull(tsal,0); 
+end // 
+delimiter ; 
+delimiter // 
+create function total_employees(dno int) 
+returns int 
+deterministic 
+begin 
+declare tcount int; 
+select count(*) into tcount 
+from emp1 
+where deptno = dno; 
+return tcount; 
+end // 
+delimiter ; 
+select total_salary(10); 
+select total_salary(20); 
+select total_salary(30); 
+select total_employees(10); 
+select total_employees(20); 
+select total_employees(30); 
