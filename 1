@@ -1,0 +1,31 @@
+Create table emp1 and dept1 same as emp and dept.  
+Create a trigger which will delete all records from emp1 table of corresponding department 
+deleted from dept1 table. 
+
+
+
+show databases; 
+use seit26; 
+create table dept1 as 
+select * from dept; 
+alter table dept1 
+add primary key(deptno); 
+select * from dept1; 
+create table emp1 as 
+select * from emp; 
+alter table emp1 
+add primary key(empno); 
+select * from emp1; 
+delimiter // 
+create trigger dept1_delete 
+after delete 
+on dept1 
+for each row 
+begin 
+delete from emp1 
+where deptno = old.deptno; 
+end; 
+// 
+delimiter ; 
+select * from dept1; 
+select * from emp1; 
