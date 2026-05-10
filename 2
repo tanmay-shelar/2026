@@ -1,0 +1,27 @@
+Create table totalsal as select deptno, sum(sal) sal from emp1 group by deptno;  
+Write a trigger which will update total salary in totalsal table whenever there is modification 
+in sal of emp1 table. 
+
+
+
+show databases; 
+use seit26; 
+create table emp1 as select * from emp; 
+create table totalsal as 
+select deptno, sum(sal) as sal 
+from emp1 
+group by deptno; 
+delimiter // 
+create trigger update_totalsal 
+after update on emp1 
+for each row 
+begin 
+if old.sal <> new.sal then 
+update totalsal 
+set sal = sal - old.sal + new.sal 
+where deptno = old.deptno; 
+end if; 
+end; 
+// 
+delimiter ; 
+select * from totalsal; 
