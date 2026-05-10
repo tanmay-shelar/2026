@@ -1,0 +1,56 @@
+Perform following SQL queries on the database SEIT 
+I. List name of employee and name of manager also list employee with no manager. 
+II. List employee number, name of employee and his manager name. Also list the employee 
+who  
+does not report to anyone. 
+III. List name of employee and name of manager. Also display name of employee who does 
+not  
+have manager. 
+IV. List different designations in department 10 and 20 using set operator. 
+V. List all employees from department 20 those who are drawing more salary than average 
+salary  
+of department 20; 
+VI. List employee details who earn salary greater than average salary of their department. 
+VII. List all employees who have joined the company before their manager. 
+VIII. List different designations in department 10 but not in department 20 using set 
+operator. 
+IX. List all employee whose salary is greater than average salary of his department. 
+X. List all employee with name containing two ‘a’ 
+
+
+
+show databases; 
+use seit26; 
+select e.ename as employee_name, ifnull(m.ename,'No Manager') as manager_name 
+from emp e 
+left join emp m on e.mgr = m.empno; 
+select e.empno, e.ename as employee_name, ifnull(m.ename,'No Manager') as 
+manager_name 
+from emp e 
+left join emp m on e.mgr = m.empno; 
+select e.ename as employee_name, ifnull(m.ename,'No Manager') as manager_name 
+from emp e 
+left join emp m on e.mgr = m.empno; 
+select distinct job from emp where deptno=10 
+union 
+select distinct job from emp where deptno=20; 
+select * 
+from emp 
+where deptno=20 
+and sal > (select avg(sal) from emp where deptno=20); 
+select * 
+from emp e 
+where sal > ( 
+select avg(sal) 
+from emp 
+where deptno = e.deptno 
+); 
+select e.* 
+from emp e 
+join emp m on e.mgr = m.empno 
+where e.hiredate < m.hiredate; 
+select distinct job from emp where deptno=10 
+and job not in (select distinct job from emp where deptno=20); 
+select * 
+from emp 
+where ename like '%a%a%'; 
