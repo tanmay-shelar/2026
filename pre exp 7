@@ -1,0 +1,64 @@
+Write and execute PL/SQL stored procedure and function to perform a suitable  
+task on the database. Demonstrate its use. 
+Use command before creating function 
+mysql> SET GLOBAL log_bin_trust_function_creators = 1; 
+
+
+show databases;  
+use seit26;  
+drop table emp1;  
+create table emp1 as select * from emp;  
+delimiter /   
+create procedure incrSal(in empno1 int)   
+begin   
+declare sal1 float(10,2);  
+select sal into sal1 from emp where empno = empno1;  
+if sal1 >3000 then  
+update emp1 set sal= sal+ sal*10 where empno= empno1;  
+else  
+update emp1 set sal = 3000 where empno = empno1;  
+end if;  
+end;  
+/   
+delimiter ;  
+call incrSal(7934);  
+select * from emp1;  
+drop procedure incrSal;  
+drop table emp1;  
+create table emp1 as select * from emp;  
+delete from emp1;  
+delimiter /  
+create procedure insertEmp(in empnoin int)  
+begin  
+declare empno1 int;  
+declare empname1 varchar(20);  
+declare job1 char(10);  
+declare mgr1 int;  
+declare hiredate1 date;  
+declare sal1 float;  
+declare comm1 float;  
+declare deptno1 int;  
+select * into empno1, empname1,job1, mgr1, hiredate1, sal1, comm1, deptno1 from emp  
+where empno=empnoin;  
+insert into emp1 values(empno1,empname1,job1,mgr1,hiredate1,sal1,comm1,deptno1);   
+end;  
+/  
+delimiter ;  
+call insertEmp(7839);  
+select * from emp1;  
+drop procedure insertEmp;  
+drop table emp1;  
+drop function if exists findTotalSal;  
+create table emp1 as select * from emp;  
+delimiter /  
+create function findTotalSal(d1 int) returns float  
+DETERMINISTIC  
+begin  
+declare x float;  
+set x = 0;  
+select sum(sal) into x from emp1 where deptno = d1;  
+return (x);  
+end;  
+/  
+delimiter ;  
+select findTotalsal(10); 
