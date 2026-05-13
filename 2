@@ -1,0 +1,155 @@
+Practical 2
+Design a web page that includes an image, hyperlink, and a nested table.
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Page with Image, Hyperlink, and Nested Table</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 20px;
+        }
+
+        h1 {
+            color: darkblue;
+        }
+
+        img {
+            border: 3px solid black;
+            border-radius: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            background-color: white;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: lightblue;
+        }
+
+        .nested-table {
+            width: 100%;
+            background-color: #fafafa;
+        }
+
+        a {
+            color: blue;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Student Information Web Page</h1>
+
+    <!-- Image Section -->
+    <h2>Image</h2>
+
+    <img src="https://via.placeholder.com/300x200"
+         alt="Student Image"
+         width="300"
+         height="200">
+
+    <!-- Hyperlink Section -->
+    <h2>Hyperlink</h2>
+
+    <p>
+        Visit 
+        <a href="https://www.google.com" target="_blank">
+            Google Website
+        </a>
+    </p>
+
+    <!-- Nested Table Section -->
+    <h2>Students and Subject Marks</h2>
+
+    <table>
+        <tr>
+            <th>Student Name</th>
+            <th>Marks Details</th>
+        </tr>
+
+        <tr>
+            <td>Rahul</td>
+
+            <td>
+                <!-- Nested Table -->
+                <table class="nested-table">
+                    <tr>
+                        <th>Subject</th>
+                        <th>Marks</th>
+                    </tr>
+
+                    <tr>
+                        <td>Math</td>
+                        <td>85</td>
+                    </tr>
+
+                    <tr>
+                        <td>Science</td>
+                        <td>90</td>
+                    </tr>
+
+                    <tr>
+                        <td>English</td>
+                        <td>78</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Priya</td>
+
+            <td>
+                <!-- Nested Table -->
+                <table class="nested-table">
+                    <tr>
+                        <th>Subject</th>
+                        <th>Marks</th>
+                    </tr>
+
+                    <tr>
+                        <td>Math</td>
+                        <td>92</td>
+                    </tr>
+
+                    <tr>
+                        <td>Science</td>
+                        <td>88</td>
+                    </tr>
+
+                    <tr>
+                        <td>English</td>
+                        <td>95</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+    </table>
+
+</body>
+</html>
+
