@@ -1,0 +1,79 @@
+Practical 7
+Create a web page that uses JavaScript to display dynamic content using DOM.
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic DOM Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            transition: background-color 0.5s ease;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        #messages {
+            margin-top: 20px;
+        }
+
+        .msg {
+            background: #f2f2f2;
+            padding: 10px;
+            margin: 5px auto;
+            width: 60%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="title">Welcome!</h1>
+    <p>Click buttons to interact with the page.</p>
+
+    <button onclick="changeColor()">Change Background Color</button>
+    <button onclick="addMessage()">Add New Message</button>
+    <button onclick="changeText()">Change Title Text</button>
+
+    <div id="messages"></div>
+
+    <script>
+        // Change background color randomly
+        function changeColor() {
+            const colors = ["#ffadad", "#ffd6a5", "#fdffb6", "#caffbf", "#a0c4ff", "#bdb2ff"];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.backgroundColor = randomColor;
+        }
+
+        // Add new messages dynamically
+        let count = 1;
+        function addMessage() {
+            const messageBox = document.getElementById("messages");
+
+            const newMsg = document.createElement("div");
+            newMsg.className = "msg";
+            newMsg.textContent = "New message #" + count;
+
+            messageBox.appendChild(newMsg);
+            count++;
+        }
+
+        // Change the main heading text
+        let titleCount = 1;
+        function changeText() {
+            const title = document.getElementById("title");
+            title.textContent = "You clicked change text " + titleCount + " times!";
+            titleCount++;
+        }
+    </script>
+
+</body>
+</html>
