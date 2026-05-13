@@ -1,0 +1,72 @@
+Practical 3
+Create a form with fields: name, email, gender, date of birth, and submit button.
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Centered Registration Form</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-box {
+            border: 1px solid black;
+            padding: 20px;
+        }
+
+        .btn-center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-box">
+
+        <h2>Student Registration Form</h2>
+
+        <form>
+
+            <!-- Name -->
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <br><br>
+
+            <!-- Email -->
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <br><br>
+
+            <!-- Gender -->
+            <label>Gender:</label>
+
+            <input type="radio" id="male" name="gender" value="Male">
+            <label for="male">Male</label>
+
+            <input type="radio" id="female" name="gender" value="Female">
+            <label for="female">Female</label>
+            <br><br>
+
+            <!-- Date of Birth -->
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob">
+            <br><br>
+
+            <!-- Submit Button -->
+            <div class="btn-center">
+                <input type="submit" value="Submit">
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+</html>
