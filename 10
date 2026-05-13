@@ -1,0 +1,79 @@
+Practical 10
+Write a PHP program to accept form input and display it using the POST method
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PHP in HTML Body</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 300px;
+        }
+
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 8px 0;
+        }
+
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h2>User Input Form</h2>
+
+    <form method="POST">
+        Name: <br>
+        <input type="text" name="name"><br>
+
+        Email: <br>
+        <input type="email" name="email"><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <hr>
+
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+
+        echo "<h3>Submitted Data:</h3>";
+        echo "Name: " . htmlspecialchars($name) . "<br>";
+        echo "Email: " . htmlspecialchars($email) . "<br>";
+    }
+    ?>
+
+</div>
+
+</body>
+</html>
