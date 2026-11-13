@@ -1,0 +1,125 @@
+1. Greedy_best_first_search:  
+
+import heapq
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['G'],
+    'F': ['G'],
+    'G': []
+}
+
+heuristic = {
+    'A': 10,
+    'B': 8,
+    'C': 5,
+    'D': 7,
+    'E': 3,
+    'F': 2,
+    'G': 0
+}
+
+start = 'A'
+goal = 'G'
+
+def greedy_best_first_search(graph, heuristic, start, goal):
+    priority_queue = []
+    heapq.heappush(priority_queue, (heuristic[start], start))
+    visited = set()
+    parent = {start: None}
+    
+    while priority_queue:
+        h_value, current = heapq.heappop(priority_queue)
+        
+        if current in visited:
+            continue
+            
+        print("heuristic =", h_value, "exploring =", current)
+        visited.add(current)
+        
+        if current == goal:
+            break
+            
+        for neighbour in graph[current]:
+            if neighbour not in visited:
+                if neighbour not in parent:
+                    parent[neighbour] = current
+                heapq.heappush(priority_queue, (heuristic[neighbour], neighbour))
+                
+    path = []
+    current = goal
+    while current is not None:
+        path.append(current)
+        current = parent[current]
+    path.reverse()
+    
+    return path
+
+path = greedy_best_first_search(graph, heuristic, start, goal)
+print("\nPath Found:")
+print(" -> ".join(path))
+
+
+
+2. A*:  
+import heapq
+
+graph = {
+    'A': [('B', 1), ('C', 4)],
+    'B': [('D', 2), ('E', 5)],
+    'C': [('F', 3)],
+    'D': [('G', 3)],
+    'E': [('G', 2)],
+    'F': [('G', 2)],
+    'G': []
+}
+
+heuristic = {
+    'A': 7,
+    'B': 6,
+    'C': 4,
+    'D': 3,
+    'E': 2,
+    'F': 2,
+    'G': 0
+}
+
+start = 'A'
+goal = 'G'
+
+def astar(graph, start, goal, heuristic):
+    open_list = []
+    gscore = {start: 0}
+    parent = {start: None}
+    fscore = gscore[start] + heuristic[start]
+    
+    heapq.heappush(open_list, (fscore, start))
+    
+    while open_list:
+        current_f, current = heapq.heappop(open_list)
+        
+        if current == goal:
+            path = []
+            while current is not None:
+                path.append(current)
+                current = parent[current]
+            path.reverse()
+            return path, gscore[goal]
+            
+        for neighbor, cost in graph[current]:
+            tentative_g = gscore[current] + cost
+            if neighbor not in gscore or tentative_g < gscore[neighbor]:
+                gscore[neighbor] = tentative_g
+                fscore = tentative_g + heuristic[neighbor]
+                parent[neighbor] = current
+                heapq.heappush(open_list, (fscore, neighbor))
+                
+    return None, float("inf")
+
+path, cost = astar(graph, start, goal, heuristic)
+print("Shortest Path:", path)
+print("Total Cost:", cost)
+
