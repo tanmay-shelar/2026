@@ -1,0 +1,115 @@
+1
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+# Load dataset using your exact path
+data = pd.read_csv(r"C:\Users\Tanmay\Downloads\breast-cancer.csv")
+print("First 5 rows of dataset:")
+display(data.head(5))
+
+
+2
+# Separate features and target
+x = data.iloc[:, 2:]
+# Encode target and convert explicitly to integer
+y = data.iloc[:, 1].replace({'M': 0, 'B': 1}).astype(int)
+print("Dataset shape:", x.shape)
+print("Number of samples:", x.shape[0])
+print("Number of original features:", x.shape[1])
+print("Target classes shape:", y.shape)
+print("Target unique values:", y.unique())
+
+
+3
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=42)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+print("Training samples:", X_train.shape[0])
+print("Testing samples:", X_test.shape[0])
+print("Features before PCA:", X_train_scaled.shape[1])
+
+
+4
+model_original = LogisticRegression(max_iter=5000)
+model_original.fit(X_train_scaled, y_train)
+y_pred_original = model_original.predict(X_test_scaled)
+print("Classification report without PCA:")
+print("Accuracy  = ", accuracy_score(y_test, y_pred_original))
+print("Precision = ", precision_score(y_test, y_pred_original))
+print("Recall    = ", recall_score(y_test, y_pred_original))
+print("F1 Score  = ", f1_score(y_test, y_pred_original))
+cm = confusion_matrix(y_test, y_pred_original)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["M", "B"])
+disp.plot(cmap="Blues", values_format="d")
+plt.title("Confusion Matrix (Without PCA)")
+plt.show()
+
+
+5
+pca_all = PCA()
+pca_all.fit(X_train_scaled)
+cumulative_variance = np.cumsum(pca_all.explained_variance_ratio_)
+
+plt.figure(figsize=(9, 5))
+plt.plot(range(1, len(cumulative_variance) + 1), cumulative_variance, marker="o")
+plt.axhline(y=0.95, color='r', linestyle="--", label="95% variance threshold")
+plt.xlabel("Number of Principal Components")
+plt.ylabel("Cumulative Explained Variance")
+plt.title("PCA: Cumulative Explained Variance")
+plt.grid(True, alpha=0.3)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+6
+pca_95 = PCA(n_components=0.95)
+X_train_pca95 = pca_95.fit_transform(X_train_scaled)
+X_test_pca95 = pca_95.transform(X_test_scaled)
+print("Features before PCA:", X_train_scaled.shape[1])
+print("Features after PCA (95% variance):", X_train_pca95.shape[1])
+print("Total explained variance:", round(np.sum(pca_95.explained_variance_ratio_), 4))
+print("Variance retained (%):", round(np.sum(pca_95.explained_variance_ratio_) * 100, 2))
+# Train model with 95% variance components
+model_pca95 = LogisticRegression(max_iter=5000)
+model_pca95.fit(X_train_pca95, y_train)
+y_pred_pca95 = model_pca95.predict(X_test_pca95)
+print("\nClassification report with PCA (95% variance):")
+print("Accuracy  = ", accuracy_score(y_test, y_pred_pca95))
+print("Precision = ", precision_score(y_test, y_pred_pca95))
+print("Recall    = ", recall_score(y_test, y_pred_pca95))
+print("F1 Score  = ", f1_score(y_test, y_pred_pca95))
+
+
+7
+pca_2d = PCA(n_components=2)
+X_train_pca2d = pca_2d.fit_transform(X_train_scaled)
+X_test_pca2d = pca_2d.transform(X_test_scaled)
+print("Explained variance ratio (2 components):", pca_2d.explained_variance_ratio_)
+print("Total variance retained (2 components):", round(np.sum(pca_2d.explained_variance_ratio_), 4))
+# Train model with 2 components
+model_pca2d = LogisticRegression(max_iter=5000)
+model_pca2d.fit(X_train_pca2d, y_train)
+y_pred_pca2d = model_pca2d.predict(X_test_pca2d)
+print("\nClassification report with 2 PCA Components:")
+print("Accuracy  = ", accuracy_score(y_test, y_pred_pca2d))
+print("Precision = ", precision_score(y_test, y_pred_pca2d))
+print("Recall    = ", recall_score(y_test, y_pred_pca2d))
+print("F1 Score  = ", f1_score(y_test, y_pred_pca2d))
+# Visualization of 2D Reduced Dimensions
+plt.figure(figsize=(8, 6))
+plt.scatter(X_train_pca2d[:, 0], X_train_pca2d[:, 1], c=y_train, cmap='coolwarm', edgecolor='k', alpha=0.7)
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.title("Visualization of Reduced Dimensions (2D PCA)")
+plt.colorbar(label="Diagnosis (0=Malignant, 1=Benign)")
+plt.grid(True, alpha=0.3)
+plt.show()
