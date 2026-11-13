@@ -1,0 +1,156 @@
+rules = [
+    (["fever", "cough", "body_ache"], "flu_like_illness"),
+    (["sneezing", "cough"], "common_cold"),
+    (["flu_like_illness"], "medical_consultation"),
+    (["common_cold"], "rest_and_hydration"),
+    (["fever", "body_ache"], "possible_viral_illness")
+]
+
+# Human-readable descriptions of propositions
+descriptions = {
+    "fever": "Fever",
+    "cough": "Cough",
+    "sneezing": "Sneezing",
+    "body_ache": "Body ache",
+    "flu_like_illness": "Flu-like illness",
+    "common_cold": "Common cold",
+    "medical_consultation": "Recommend medical consultation",
+    "rest_and_hydration": "Recommend rest and hydration",
+    "possible_viral_illness": "Possible viral illness"
+}
+
+
+# Forward Chaining: Data-driven reasoning
+def forward_chaining(initial_facts):
+    facts = set(initial_facts)
+    changed = True
+
+    print("\n--- Forward Chaining ---")
+    print("Initial facts:", sorted(facts))
+
+    while changed:
+        changed = False
+
+        for premises, conclusion in rules:
+            if all(p in facts for p in premises):
+                if conclusion not in facts:
+                    facts.add(conclusion)
+                    changed = True
+
+                    rule_text = " AND ".join(premises)
+                    print(
+                        f"Rule fired: {rule_text} "
+                        f"-> {conclusion}"
+                    )
+
+    return facts
+
+
+# Backward Chaining: Goal-driven reasoning
+def backward_chaining(goal, facts, visited=None):
+    if visited is None:
+        visited = set()
+
+    # Goal is already established
+    if goal in facts:
+        return True
+
+    # Avoid repeatedly exploring the same goal
+    if goal in visited:
+        return False
+
+    visited = visited | {goal}
+
+    # Find a rule that can establish the goal
+    for premises, conclusion in rules:
+        if conclusion == goal:
+            # Every premise must be proved
+            if all(
+                backward_chaining(p, facts, visited.copy())
+                for p in premises
+            ):
+                return True
+
+    return False
+
+
+# Main program
+print("RULE-BASED EXPERT SYSTEM")
+print("Forward Chaining and Backward Chaining")
+print("\nEnter symptoms separated by commas.")
+print("Available symptoms: fever, cough, sneezing, body_ache")
+
+user_input = input("Enter observed symptoms: ").lower()
+
+initial_facts = {
+    item.strip()
+    for item in user_input.split(",")
+    if item.strip()
+}
+
+# Validate input symptoms
+valid_symptoms = {
+    "fever", "cough", "sneezing", "body_ache"
+}
+
+invalid = initial_facts - valid_symptoms
+
+if invalid:
+    print("Invalid symptoms:", ", ".join(sorted(invalid)))
+    print("Please run the program again with valid symptoms.")
+
+else:
+    # Execute Forward Chaining
+    inferred_facts = forward_chaining(initial_facts)
+
+    # Display inferred conclusions
+    print("\n--- Inferred Conclusions ---")
+
+    conclusions = inferred_facts - initial_facts
+
+    if conclusions:
+        for fact in sorted(conclusions):
+            print("-", descriptions.get(fact, fact))
+    else:
+        print("No additional conclusions could be inferred.")
+
+    # Available goals
+    goals = [
+        "flu_like_illness",
+        "common_cold",
+        "medical_consultation",
+        "rest_and_hydration",
+        "possible_viral_illness"
+    ]
+
+    print("\n--- Select a Goal ---")
+
+    for i, goal in enumerate(goals, start=1):
+        print(f"{i}. {descriptions[goal]}")
+
+    try:
+        choice = int(input("Select a goal (1-5): "))
+
+        if 1 <= choice <= len(goals):
+            goal = goals[choice - 1]
+
+            print("\n--- Backward Chaining ---")
+            print("Goal:", descriptions[goal])
+
+            result = backward_chaining(goal, initial_facts)
+
+            if result:
+                print(
+                    "Result: TRUE - The goal is supported "
+                    "by the facts and rules."
+                )
+            else:
+                print(
+                    "Result: FALSE - The goal could not "
+                    "be proved using the supplied facts and rules."
+                )
+        else:
+            print("Invalid choice. Please select a number from 1 to 5.")
+
+    except ValueError:
+        print("Invalid input. Please enter a number from 1 to 5.")
