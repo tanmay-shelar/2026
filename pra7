@@ -1,0 +1,108 @@
+1
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import (
+    accuracy_score, 
+    precision_score, 
+    recall_score, 
+    f1_score, 
+    confusion_matrix, 
+    ConfusionMatrixDisplay
+)
+import matplotlib.pyplot as plt
+
+
+2
+# ---------------------------------------------------
+# 2. Load Dataset
+# ---------------------------------------------------
+df = pd.read_csv(r"C:\Users\Tanmay\Downloads\Heart.csv")
+
+print("First 5 records:")
+print(df.head())
+print("\nDataset Shape:")
+print(df.shape)
+print("\nColumn Names:")
+print(df.columns)
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+
+3
+df["Ca"] = df["Ca"].fillna(df["Ca"].mean())
+df["Thal"] = df["Thal"].fillna(df["Thal"].mode()[0])
+print("\nMissing Values after cleaning:\n", df.isnull().sum())
+
+
+4
+unused_column = ["Unnamed: 0", "AHD", "ChestPain", "Thal"]
+X = df.drop(unused_column, axis=1)
+y = df["AHD"]
+print("Features:")
+print(X.columns)
+print("\nTarget Distribution:\n", y.value_counts())
+
+
+5
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, stratify=y
+)
+print("Training Data Shape:", X_train.shape)
+print("Testing Data Shape:", X_test.shape)
+
+
+6
+y_train = y_train.map({"Yes": 1, "No": 0}).astype(int)
+y_test = y_test.map({"Yes": 1, "No": 0}).astype(int)
+
+
+7
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+
+8
+# Create and train Logistic Regression model
+logistic_model = LogisticRegression(max_iter=100)
+logistic_model.fit(X_train_scaled, y_train)
+# Predictions
+y_pred_lr = logistic_model.predict(X_test_scaled)
+# Evaluation Metrics
+print("Accuracy of Logistic Model:", accuracy_score(y_test, y_pred_lr))
+print("Precision of Logistic Model:", precision_score(y_test, y_pred_lr))
+print("Recall of Logistic Model:", recall_score(y_test, y_pred_lr))
+print("F1 Score of Logistic Model:", f1_score(y_test, y_pred_lr))
+# Confusion Matrix Plot
+ConfusionMatrixDisplay.from_predictions(
+    y_test, y_pred_lr, display_labels=["Disease", "No Disease"]
+)
+plt.title("Confusion Matrix - Logistic Regression")
+plt.show()
+
+
+9
+# Create and train KNN model
+k = 5
+knnmodel = KNeighborsClassifier(n_neighbors=k)
+knnmodel.fit(X_train_scaled, y_train)
+
+# Predictions
+y_pred_knn = knnmodel.predict(X_test_scaled)
+
+# Evaluation Metrics
+print("Accuracy of KNN model:", accuracy_score(y_test, y_pred_knn))
+print("Precision of KNN model:", precision_score(y_test, y_pred_knn))
+print("Recall of KNN model:", recall_score(y_test, y_pred_knn))
+print("F1 Score of KNN model:", f1_score(y_test, y_pred_knn))
+
+# Confusion Matrix Plot
+ConfusionMatrixDisplay.from_predictions(
+    y_test, y_pred_knn, display_labels=["Disease", "No Disease"]
+)
+plt.title("Confusion Matrix - KNN")
+plt.show()
