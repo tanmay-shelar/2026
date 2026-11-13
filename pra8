@@ -159,9 +159,10 @@ plt.show()
 
 
 31
-new_data = [[337, 118, 4, 9.88]]
-
-# Model cha wapar karun prediction kadha
+new_data = pd.DataFrame(
+    [[337, 118, 4, 9.88]],
+    columns=['GRE Score', 'TOEFL Score', 'University Rating', 'CGPA'],
+)
 prediction = tree_model.predict(new_data)[0]
 
 
