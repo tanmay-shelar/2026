@@ -1,4 +1,4 @@
-BFS
+#BFS
 from collections import deque
 import time
 
@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
         
 
-DFS
+#DFS
 import time
 
 maze_grid = [
