@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 
 2
-df = pd.read_csv('Admission_Predict.csv')
+df = pd.read_csv(r"C:\Users\Tanmay\Downloads\Admission_Predict.csv")
 
 
 3
