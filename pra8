@@ -159,14 +159,18 @@ plt.show()
 
 
 31
-new_data=[[337,118,4,9.88]]
+new_data = [[337, 118, 4, 9.88]]
+
+# Model cha wapar karun prediction kadha
+prediction = tree_model.predict(new_data)[0]
+
 
 
 32
 if prediction == 1:
-    print("Student get admission" )
+    print("Student gets admission")
 else:
-     print("Student not get admission" )
+    print("Student does not get admission")
 
 
 33
