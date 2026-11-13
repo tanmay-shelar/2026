@@ -1,0 +1,40 @@
+class SmartHomeAgent:
+    def __init__(self):
+        self.light = False
+        self.fan = False
+        self.alarm = False
+
+    def perceive(self, light_level, temperature, motion, owner_home):
+        # Light Control
+        if light_level < 40:
+            self.light = True
+        else:
+            self.light = False
+
+        # Fan Control
+        if temperature > 30:
+            self.fan = True
+        else:
+            self.fan = False
+
+        # Security
+        if motion and not owner_home:
+            self.alarm = True
+        else:
+            self.alarm = False
+
+    def display(self):
+        print("\n------ Smart Home Status ------")
+        print("Lights:", "ON" if self.light else "OFF")
+        print("Fan:", "ON" if self.fan else "OFF")
+        print("Alarm:", "ON" if self.alarm else "OFF")
+
+# Driver Program
+agent = SmartHomeAgent()
+light = int(input("Enter Light Level (0-100): "))
+temp = float(input("Enter Temperature: "))
+motion = input("Motion Detected? (yes/no): ").lower() == "yes"
+owner = input("Owner at Home? (yes/no): ").lower() == "yes"
+
+agent.perceive(light, temp, motion, owner)
+agent.display()
