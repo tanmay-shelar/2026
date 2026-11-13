@@ -1,0 +1,95 @@
+1
+import pandas as pd
+import numpy as np
+# Load the dataset
+df = pd.read_csv(r"C:\Users\Tanmay\Downloads\Heart - Heart.csv")
+# Display the first 5 records
+print(df.head())
+
+
+2
+print("Shape of dataset:", df.shape)
+print("\nColumn names:\n", df.columns)
+
+
+3
+print(df.dtypes)
+print("\n")
+df.info()
+
+
+4
+print("Total duplicate rows:", df.duplicated().sum())
+print("\nMissing values per column:\n", df.isnull().sum())
+
+
+5
+# Handle missing values using median and mode imputation
+df["Ca"] = df["Ca"].fillna(df["Ca"].median())
+df["Thal"] = df["Thal"].fillna(df["Thal"].mode()[0])
+
+# Drop unnecessary columns
+df = df.drop(['Oldpeak', 'Slope'], axis=1)
+
+# Verify missing values are now zero
+print("\nMissing values after cleaning:\n", df.isnull().sum())
+print("Updated dataset shape:", df.shape)
+
+
+6
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+numeric_var = df.select_dtypes(include='number').columns
+X_num = df[numeric_var]
+
+# Standardization (Z-score)
+scaler_std = StandardScaler()
+X_standardized = scaler_std.fit_transform(X_num)
+print("Standardized data sample:\n", X_standardized[:2])
+
+# Normalization (Min-Max)
+scaler_minmax = MinMaxScaler()
+X_normalized = scaler_minmax.fit_transform(X_num)
+print("\nNormalized data sample:\n", X_normalized[:2])
+
+
+7
+from sklearn.preprocessing import LabelEncoder
+
+cat_var = df.select_dtypes(include=['object', 'string']).columns
+encoder = LabelEncoder()
+
+for col in cat_var:
+    df[col] = encoder.fit_transform(df[col])
+
+print("Data head after label encoding:\n")
+print(df.head())
+
+
+8
+from sklearn.preprocessing import OneHotEncoder
+
+onehot_encoder = OneHotEncoder(drop='first', sparse_output=False)
+encoded_chest_pain = onehot_encoder.fit_transform(df[['ChestPain']])
+
+print("One-hot encoded data sample:\n", encoded_chest_pain[:5])
+
+
+9
+from sklearn.model_selection import train_test_split
+
+# Separate features (X) and target variable (y)
+X = df.drop('AHD', axis=1)
+y = df['AHD']
+
+# Split the dataset into 80% training and 20% testing
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, stratify=y
+)
+
+print("X_train shape:", X_train.shape)
+print("X_test shape:", X_test.shape)
+print("y_train shape:", y_train.shape)
+print("y_test shape:", y_test.shape)
+
+
